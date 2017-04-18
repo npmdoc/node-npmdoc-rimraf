@@ -63,6 +63,15 @@
 
         <li>
 
+            <a class="apidocElementLiA" href="#apidoc.element.rimraf.rimraf">
+            function <span class="apidocSignatureSpan"></span>rimraf
+            <span class="apidocSignatureSpan">(p, options, cb)</span>
+            </a>
+
+        </li>
+
+        <li>
+
             <a class="apidocElementLiA" href="#apidoc.element.rimraf.sync">
             function <span class="apidocSignatureSpan">rimraf.</span>sync
             <span class="apidocSignatureSpan">(p, options)</span>
@@ -76,6 +85,90 @@
 
 <div class="apidocSectionDiv">
 <h1><a href="#apidoc.module.rimraf" id="apidoc.module.rimraf">module rimraf</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.rimraf.rimraf" id="apidoc.element.rimraf.rimraf">
+        function <span class="apidocSignatureSpan"></span>rimraf
+        <span class="apidocSignatureSpan">(p, options, cb)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function rimraf(p, options, cb) {
+  if (typeof options === &#x27;function&#x27;) {
+    cb = options
+    options = {}
+  }
+
+  assert(p, &#x27;rimraf: missing path&#x27;)
+  assert.equal(typeof p, &#x27;string&#x27;, &#x27;rimraf: path should be a string&#x27;)
+  assert.equal(typeof cb, &#x27;function&#x27;, &#x27;rimraf: callback function required&#x27;)
+  assert(options, &#x27;rimraf: invalid options argument provided&#x27;)
+  assert.equal(typeof options, &#x27;object&#x27;, &#x27;rimraf: options should be object&#x27;)
+
+  defaults(options)
+
+  var busyTries = 0
+  var errState = null
+  var n = 0
+
+  if (options.disableGlob || !glob.hasMagic(p))
+    return afterGlob(null, [p])
+
+  options.lstat(p, function (er, stat) {
+    if (!er)
+      return afterGlob(null, [p])
+
+    glob(p, options.glob, afterGlob)
+  })
+
+  function next (er) {
+    errState = errState || er
+    if (--n === 0)
+      cb(errState)
+  }
+
+  function afterGlob (er, results) {
+    if (er)
+      return cb(er)
+
+    n = results.length
+    if (n === 0)
+      return cb()
+
+    results.forEach(function (p) {
+      rimraf_(p, options, function CB (er) {
+        if (er) {
+          if ((er.code === &#x22;EBUSY&#x22; || er.code === &#x22;ENOTEMPTY&#x22; || er.code === &#x22;EPERM&#x22;) &#x26;&#x26;
+              busyTries &#x3c; options.maxBusyTries) {
+            busyTries ++
+            var time = busyTries * 100
+            // try again, with the same exact callback as this one.
+            return setTimeout(function () {
+              rimraf_(p, options, CB)
+            }, time)
+          }
+
+          // this one won&#x27;t happen if graceful-fs is used.
+          if (er.code === &#x22;EMFILE&#x22; &#x26;&#x26; timeout &#x3c; options.emfileWait) {
+            return setTimeout(function () {
+              rimraf_(p, options, CB)
+            }, timeout ++)
+          }
+
+          // already gone
+          if (er.code === &#x22;ENOENT&#x22;) er = null
+        }
+
+        timeout = 0
+        next(er)
+      })
+    })
+  }
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
 
 
     <h2>
