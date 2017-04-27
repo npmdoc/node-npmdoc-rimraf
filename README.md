@@ -1,6 +1,6 @@
 # npmdoc-rimraf
 
-#### api documentation for  [rimraf (v2.6.1)](https://github.com/isaacs/rimraf#readme)  [![npm package](https://img.shields.io/npm/v/npmdoc-rimraf.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-rimraf) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-rimraf.svg)](https://travis-ci.org/npmdoc/node-npmdoc-rimraf)
+#### basic api documentation for  [rimraf (v2.6.1)](https://github.com/isaacs/rimraf#readme)  [![npm package](https://img.shields.io/npm/v/npmdoc-rimraf.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-rimraf) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-rimraf.svg)](https://travis-ci.org/npmdoc/node-npmdoc-rimraf)
 
 #### A deep deletion module for node (like `rm -rf`)
 
